@@ -1,16 +1,9 @@
-# Date Invitation Website
+# Cute Date Flow
 
-A cute one-page interactive date invitation inspired by the TikTok concept.
+Exact flow:
+1. Ask her out
+2. Let her choose food
+3. Let her choose a date and time
+4. Show the final date summary
 
-## How to use
-1. Open `index.html` in your browser.
-2. To personalize it, edit the heading and messages inside `index.html`.
-3. Upload the file to GitHub Pages, Netlify, Vercel, or any static hosting service.
-
-## Easy text changes
-Search for:
-- `Will you go on a date with me?`
-- `YES, ABSOLUTELY`
-- `You just made my day.`
-
-No frameworks or installation required.
+Upload `index.html` to the root of your GitHub repository, replacing the old one.

@@ -1,311 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#fff6f9" />
-  <title>A Tiny Question 💗</title>
-  <style>
-    :root {
-      --pink: #e84f7d;
-      --pink-dark: #c93a67;
-      --pink-soft: #ffd8e5;
-      --cream: #fffdf8;
-      --text: #7a3550;
-      --shadow: 0 20px 60px rgba(177, 76, 111, 0.18);
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Georgia, "Times New Roman", serif;
-      overflow: hidden;
-    }
-
-    body {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(255,255,255,.95), transparent 34%),
-        radial-gradient(circle at 85% 20%, rgba(255,222,234,.75), transparent 32%),
-        linear-gradient(135deg, #fff8fb, #fdebf2 58%, #fffdf8);
-      color: var(--text);
-      position: relative;
-    }
-
-    .grain {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .05;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
-    }
-
-    .blob {
-      position: fixed;
-      border-radius: 999px;
-      filter: blur(10px);
-      opacity: .45;
-      animation: drift 9s ease-in-out infinite alternate;
-    }
-    .blob.one { width: 220px; height: 220px; background: #ffd2e0; top: -70px; left: -60px; }
-    .blob.two { width: 260px; height: 260px; background: #ffe5bf; right: -90px; bottom: -80px; animation-delay: -3s; }
-
-    @keyframes drift {
-      to { transform: translate(25px, 18px) scale(1.08); }
-    }
-
-    .card {
-      width: min(92vw, 520px);
-      padding: 42px 34px 34px;
-      text-align: center;
-      background: rgba(255, 253, 248, .92);
-      border: 1px solid rgba(255,255,255,.85);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      position: relative;
-      z-index: 3;
-      animation: appear .7s cubic-bezier(.2,.8,.2,1) both;
-    }
-
-    @keyframes appear {
-      from { opacity: 0; transform: translateY(18px) scale(.96); }
-    }
-
-    .tiny {
-      font-family: system-ui, sans-serif;
-      text-transform: uppercase;
-      letter-spacing: .22em;
-      font-size: 11px;
-      color: #b56a83;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      font-size: clamp(30px, 7vw, 46px);
-      line-height: 1.12;
-      margin: 0 0 13px;
-      font-weight: 600;
-    }
-
-    .subtitle {
-      margin: 0 auto 28px;
-      max-width: 350px;
-      font-family: system-ui, sans-serif;
-      line-height: 1.55;
-      color: #956078;
-      font-size: 15px;
-    }
-
-    .yes {
-      width: 100%;
-      border: 0;
-      border-radius: 999px;
-      padding: 16px 22px;
-      font: 700 15px/1 system-ui, sans-serif;
-      color: white;
-      background: linear-gradient(135deg, var(--pink), #f06e96);
-      box-shadow: 0 12px 25px rgba(232, 79, 125, .28);
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-
-    .yes:hover { transform: translateY(-2px) scale(1.015); box-shadow: 0 16px 30px rgba(232,79,125,.34); }
-    .yes:active { transform: scale(.98); }
-
-    .no {
-      position: fixed;
-      z-index: 5;
-      border: 0;
-      background: transparent;
-      color: #8e6c79;
-      font: 600 12px/1 system-ui, sans-serif;
-      padding: 12px;
-      cursor: pointer;
-      user-select: none;
-      transition: left .18s ease, top .18s ease, transform .18s ease;
-    }
-
-    .hint {
-      margin-top: 16px;
-      font: 12px/1.5 system-ui, sans-serif;
-      color: #bd8a9c;
-    }
-
-    .success {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      place-items: center;
-      padding: 24px;
-      background: radial-gradient(circle at center, rgba(255,245,249,.8), rgba(255,230,240,.97));
-    }
-
-    .success.show { display: grid; animation: fade .45s ease both; }
-    @keyframes fade { from { opacity: 0; } }
-
-    .success-box {
-      width: min(92vw, 560px);
-      text-align: center;
-      padding: 44px 28px;
-      border-radius: 30px;
-      background: rgba(255,255,255,.85);
-      box-shadow: var(--shadow);
-      animation: pop .6s cubic-bezier(.18,.89,.32,1.28) both;
-    }
-
-    @keyframes pop {
-      from { opacity: 0; transform: scale(.75); }
-    }
-
-    .success-box h2 {
-      font-size: clamp(38px, 9vw, 64px);
-      margin: 0 0 12px;
-    }
-
-    .success-box p {
-      margin: 0;
-      font: 17px/1.6 system-ui, sans-serif;
-      color: #8f526a;
-    }
-
-    .heart {
-      position: fixed;
-      z-index: 25;
-      top: -30px;
-      pointer-events: none;
-      animation: fall linear forwards;
-      filter: drop-shadow(0 4px 4px rgba(180,60,100,.15));
-    }
-
-    @keyframes fall {
-      to {
-        transform: translate3d(var(--drift), 110vh, 0) rotate(540deg);
-        opacity: .85;
-      }
-    }
-
-    @media (max-width: 540px) {
-      .card { padding: 36px 24px 28px; border-radius: 24px; }
-      .subtitle { font-size: 14px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cute Date Flow 💗</title>
+<style>
+:root{
+  --pink:#d94f7d; --pink2:#ef87aa; --ink:#8d3f5c; --muted:#9f7a88;
+  --paper:rgba(255,252,247,.92); --line:#eadfe3;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; display:grid; place-items:center; overflow:hidden;
+  color:var(--ink); font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,255,255,.95),transparent 28%),
+    radial-gradient(circle at 80% 30%,rgba(255,223,232,.7),transparent 30%),
+    linear-gradient(135deg,#fff8fb,#fbeef3 55%,#fffaf4);
+}
+body:before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.app{width:min(92vw,430px); position:relative}
+.card{
+  display:none; padding:34px 28px 28px; border-radius:24px; background:var(--paper);
+  box-shadow:0 22px 65px rgba(153,72,101,.18); border:1px solid rgba(255,255,255,.8);
+  backdrop-filter:blur(12px); animation:in .45s ease both;
+}
+.card.active{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px) scale(.97)}}
+h1,h2{margin:0 0 22px;text-align:center;font-weight:500}
+h1{font-size:30px;line-height:1.2}
+h2{font-size:28px}
+button{font:600 14px system-ui,sans-serif}
+.primary{
+  width:100%; border:0; border-radius:999px; padding:15px 18px; color:white;
+  background:linear-gradient(135deg,var(--pink),var(--pink2)); cursor:pointer;
+  box-shadow:0 10px 24px rgba(217,79,125,.25); transition:.2s;
+}
+.primary:hover{transform:translateY(-1px)}
+.primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.sub{font:13px/1.5 system-ui,sans-serif;color:var(--muted);text-align:center;margin:-10px 0 22px}
+.food-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.food{
+  border:1px solid var(--line); border-radius:14px; padding:14px 8px; background:#fffafc;
+  cursor:pointer; color:#5d4b52; transition:.18s; text-align:center;
+}
+.food span{display:block;font-size:28px;margin-bottom:6px}
+.food.selected{border-color:var(--pink);background:#fff0f5;box-shadow:0 0 0 2px rgba(217,79,125,.12)}
+.label{font:12px system-ui,sans-serif;color:#7f6871;margin:13px 0 8px}
+.calendar{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fffdfb}
+.cal-head{display:flex;align-items:center;justify-content:space-between;font:600 13px system-ui,sans-serif;margin-bottom:12px}
+.cal-head button{border:0;background:transparent;color:var(--muted)}
+.week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center;font:11px system-ui,sans-serif}
+.week{color:#a38892;margin-bottom:6px}
+.day{padding:8px 0;border-radius:9px;cursor:pointer;color:#5f5056}
+.day.empty{cursor:default}
+.day:hover:not(.empty){background:#fff0f5}
+.day.selected{background:var(--pink);color:white}
+.times{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 20px}
+.time{border:1px solid var(--line);border-radius:999px;padding:8px 4px;background:#fffafc;color:#67545b;cursor:pointer;font-size:11px}
+.time.selected{background:#f7dce6;border-color:#df8ba8}
+.summary{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0;margin:6px 0 20px}
+.row{display:flex;gap:12px;align-items:center;font:15px/1.5 system-ui,sans-serif;color:#604c54;margin:9px 0}
+.note{text-align:center;font-size:20px;margin:22px 0 12px}
+.tiny{text-align:center;font:italic 11px/1.5 Georgia,serif;color:#a0848e}
+.back{display:block;margin:14px auto 0;border:0;background:transparent;color:#a56c80;cursor:pointer}
+.confetti{position:fixed;top:-30px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translate3d(var(--x),110vh,0) rotate(500deg);opacity:.9}}
+</style>
 </head>
 <body>
-  <div class="grain"></div>
-  <div class="blob one"></div>
-  <div class="blob two"></div>
-
-  <main class="card" id="card">
-    <div class="tiny">a very important question</div>
+<div class="app">
+  <section class="card active" data-step="1">
     <h1>🌸 Will you go on a date with me? 🌸</h1>
-    <p class="subtitle">I promise good vibes, something delicious, and at least one moment we will laugh about later.</p>
-    <button class="yes" id="yesBtn">YES, ABSOLUTELY 💗</button>
-    <div class="hint">There is technically another option… somewhere.</div>
-  </main>
-
-  <button class="no" id="noBtn" aria-label="No">NO 🥺</button>
-
-  <section class="success" id="success">
-    <div class="success-box">
-      <h2>YAYYY! 💖</h2>
-      <p>You just made my day.<br />Now let us plan the cutest date ever ✨</p>
-    </div>
+    <button class="primary" id="start">YES 💗</button>
   </section>
 
-  <script>
-    const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
-    const success = document.getElementById('success');
+  <section class="card" data-step="2">
+    <h2>What are we feeling?<br>🍽️✨</h2>
+    <div class="food-grid">
+      <button class="food" data-food="Pizza"><span>🍕</span>Pizza</button>
+      <button class="food" data-food="Sushi"><span>🍣</span>Sushi</button>
+      <button class="food" data-food="Burgers"><span>🍔</span>Burgers</button>
+      <button class="food" data-food="Pasta"><span>🍝</span>Pasta</button>
+      <button class="food" data-food="Tacos"><span>🌮</span>Tacos</button>
+      <button class="food" data-food="Ramen"><span>🍜</span>Ramen</button>
+    </div>
+    <button class="primary" id="foodNext" disabled>Next 💕</button>
+    <button class="back" data-back="1">← Back</button>
+  </section>
 
-    let escapeCount = 0;
+  <section class="card" data-step="3">
+    <h2>So... when are you free? 🗓️🐾</h2>
+    <div class="label">Pick a day</div>
+    <div class="calendar">
+      <div class="cal-head"><button type="button">‹</button><span>July 2026</span><button type="button">›</button></div>
+      <div class="week"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+      <div class="days" id="days"></div>
+    </div>
+    <div class="label">What time?</div>
+    <div class="times" id="times"></div>
+    <button class="primary" id="setDate" disabled>Set the date ❤️</button>
+    <button class="back" data-back="2">← Back</button>
+  </section>
 
-    function placeNoInitially() {
-      const x = Math.max(18, window.innerWidth * 0.72);
-      const y = Math.max(18, window.innerHeight * 0.72);
-      noBtn.style.left = Math.min(x, window.innerWidth - 90) + 'px';
-      noBtn.style.top = Math.min(y, window.innerHeight - 55) + 'px';
-    }
+  <section class="card" data-step="4">
+    <h2>YAY!!! 💕</h2>
+    <div class="summary">
+      <div class="row">📅 <span id="sumDate"></span></div>
+      <div class="row">⏰ <span id="sumTime"></span></div>
+      <div class="row">🍽️ <span id="sumFood"></span></div>
+    </div>
+    <div class="note">I can't wait to see you! 🌹✨</div>
+    <div class="tiny">(normal people send texts, I made a website instead)</div>
+    <button class="back" id="restart">Start over</button>
+  </section>
+</div>
 
-    function moveNo() {
-      const padding = 18;
-      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+<script>
+const state={food:"",day:null,time:""};
+const cards=[...document.querySelectorAll(".card")];
+function go(n){cards.forEach(c=>c.classList.toggle("active",c.dataset.step==n))}
+document.getElementById("start").onclick=()=>go(2);
+document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>go(b.dataset.back));
 
-      let x, y;
-      const card = document.getElementById('card').getBoundingClientRect();
+document.querySelectorAll(".food").forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll(".food").forEach(x=>x.classList.remove("selected"));
+    btn.classList.add("selected"); state.food=btn.dataset.food;
+    document.getElementById("foodNext").disabled=false;
+  }
+});
+document.getElementById("foodNext").onclick=()=>go(3);
 
-      do {
-        x = padding + Math.random() * Math.max(1, maxX - padding);
-        y = padding + Math.random() * Math.max(1, maxY - padding);
-      } while (
-        x > card.left - 80 &&
-        x < card.right + 40 &&
-        y > card.top - 60 &&
-        y < card.bottom + 40
-      );
-
-      noBtn.style.left = x + 'px';
-      noBtn.style.top = y + 'px';
-      noBtn.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
-
-      escapeCount++;
-      const scale = Math.min(1.45, 1 + escapeCount * 0.045);
-      yesBtn.style.transform = `scale(${scale})`;
-
-      const phrases = ['NO 🥺', 'ARE YOU SURE?', 'TRY AGAIN 😭', 'THINK ABOUT IT', 'PLEASE?'];
-      noBtn.textContent = phrases[Math.min(escapeCount, phrases.length - 1)];
-    }
-
-    ['mouseenter', 'pointerdown', 'touchstart'].forEach(evt => {
-      noBtn.addEventListener(evt, e => {
-        e.preventDefault();
-        moveNo();
-      }, { passive: false });
-    });
-
-    document.addEventListener('pointermove', e => {
-      const r = noBtn.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
-      const d = Math.hypot(e.clientX - cx, e.clientY - cy);
-      if (d < 85) moveNo();
-    });
-
-    yesBtn.addEventListener('click', () => {
-      success.classList.add('show');
-      noBtn.style.display = 'none';
-      launchHearts();
-    });
-
-    function launchHearts() {
-      const symbols = ['💗','💖','💕','🌸','✨','💞'];
-      for (let i = 0; i < 90; i++) {
-        setTimeout(() => {
-          const el = document.createElement('div');
-          el.className = 'heart';
-          el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-          el.style.left = Math.random() * 100 + 'vw';
-          el.style.fontSize = (16 + Math.random() * 26) + 'px';
-          el.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
-          el.style.animationDuration = (3.2 + Math.random() * 3.5) + 's';
-          document.body.appendChild(el);
-          setTimeout(() => el.remove(), 7500);
-        }, i * 45);
-      }
-    }
-
-    window.addEventListener('resize', placeNoInitially);
-    placeNoInitially();
-  </script>
+const days=document.getElementById("days");
+for(let i=0;i<3;i++) days.append(Object.assign(document.createElement("span"),{className:"day empty"}));
+for(let d=1;d<=31;d++){
+  const b=document.createElement("button"); b.className="day"; b.textContent=d;
+  b.onclick=()=>{
+    document.querySelectorAll(".day").forEach(x=>x.classList.remove("selected"));
+    b.classList.add("selected"); state.day=d; validate();
+  };
+  days.append(b);
+}
+const timeValues=["12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","6:30 PM","7:00 PM","7:30 PM","8:00 PM","8:30 PM"];
+const times=document.getElementById("times");
+timeValues.forEach(t=>{
+  const b=document.createElement("button"); b.className="time"; b.textContent=t;
+  b.onclick=()=>{
+    document.querySelectorAll(".time").forEach(x=>x.classList.remove("selected"));
+    b.classList.add("selected"); state.time=t; validate();
+  };
+  times.append(b);
+});
+function validate(){document.getElementById("setDate").disabled=!(state.day&&state.time)}
+document.getElementById("setDate").onclick=()=>{
+  const date=new Date(2026,6,state.day);
+  document.getElementById("sumDate").textContent=date.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+  document.getElementById("sumTime").textContent=state.time;
+  document.getElementById("sumFood").textContent=state.food;
+  go(4); celebrate();
+};
+document.getElementById("restart").onclick=()=>location.reload();
+function celebrate(){
+  const items=["💗","💕","🌸","✨","💖"];
+  for(let i=0;i<70;i++) setTimeout(()=>{
+    const e=document.createElement("div"); e.className="confetti";
+    e.textContent=items[Math.floor(Math.random()*items.length)];
+    e.style.left=Math.random()*100+"vw"; e.style.fontSize=14+Math.random()*22+"px";
+    e.style.setProperty("--x",(Math.random()*160-80)+"px");
+    e.style.animationDuration=3+Math.random()*3+"s"; document.body.append(e);
+    setTimeout(()=>e.remove(),6500);
+  },i*45)
+}
+</script>
 </body>
 </html>
